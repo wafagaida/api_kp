@@ -17,7 +17,8 @@ class NewsController extends Controller
     public function index()
     {
         //get news
-        $news = News::latest()->paginate(5);
+        // $news = News::latest()->paginate(5);
+        $news = News::latest()->get();
 
         //return collection of news as a resource
         return new PostResource(true, 'List Data Pengumuman', $news);

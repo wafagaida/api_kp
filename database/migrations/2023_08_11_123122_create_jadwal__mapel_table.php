@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jadwal__mapel', function (Blueprint $table) {
+        Schema::create('jadwal__mapels', function (Blueprint $table) {
             $table->id();
             $table->string('kd_mapel', 10);
             $table->string('hari', 10);
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jadwal__mapel');
+        Schema::dropIfExists('jadwal__mapels');
     }
 };

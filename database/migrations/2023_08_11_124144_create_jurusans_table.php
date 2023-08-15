@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jurusan', function (Blueprint $table) {
-            // $table->id();
-            $table->enum('jurusan', ['Farmasi', 'Teknik Sepeda Motor', 'Desain Komunikasi Visual 1', 'Desain Komunikasi Visual 2'])->primary();
+        Schema::create('jurusans', function (Blueprint $table) {
+            $table->id();
+            // $table->string('kd_jurusan')->primary();
+            $table->enum('jurusan', ['Farmasi', 'Teknik Sepeda Motor', 'Desain Komunikasi Visual 1', 'Desain Komunikasi Visual 2']);
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jurusan');
+        Schema::dropIfExists('jurusans');
     }
 };

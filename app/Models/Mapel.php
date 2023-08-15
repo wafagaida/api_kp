@@ -12,5 +12,12 @@ class Mapel extends Model
     protected $fillable = [
         'kd_mapel',
         'nama_mapel',
+        'nama_guru',
+        // 'kkm',
     ];
+
+    public function jadwal()
+    {
+        return $this->hasMany('App\Models\Jadwal_Mapel', 'kd_mapel');
+    }
 }

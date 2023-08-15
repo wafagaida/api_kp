@@ -16,11 +16,12 @@ class PostUserController extends Controller
      */
     public function index()
     {
+        return response()->json(User::orderBy('nis', 'ASC')->get());
         //get posts
-        $user = User::latest()->paginate(10);
+        // $user = User::latest()->paginate(10);
 
-        //return collection of posts as a resource
-        return new PostResource(true, 'List Data Siswa', $user);
+        // //return collection of posts as a resource
+        // return new PostResource(true, 'List Data Siswa', $user);
     }
 
     /**
