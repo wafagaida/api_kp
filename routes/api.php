@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\JadwalController;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
+// Route::get('/user', [AuthController::class, 'user'])->name('user');
 
 Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth:sanctum')->get('/user', [PostUserController::class, 'user'])->name('user');

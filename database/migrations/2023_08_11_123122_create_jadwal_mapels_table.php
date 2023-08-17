@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('kd_mapel', 10);
             $table->string('hari', 10);
-            $table->string('ruang', 45);
             $table->string('jam', 25);
-            $table->enum('jurusan', ['Farmasi', 'Teknik Sepeda Motor', 'Desain Komunikasi Visual 1', 'Desain Komunikasi Visual 2']);
-            $table->enum('kelas', ['X', 'XI', 'XII']);
+            $table->string('kd_kelas', 25);
+            $table->enum('tingkat', ['X', 'XI', 'XII']);
             $table->timestamps();
         });
     }

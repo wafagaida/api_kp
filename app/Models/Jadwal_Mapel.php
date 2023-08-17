@@ -14,9 +14,9 @@ class Jadwal_Mapel extends Model
         'kd_mapel',
         'hari',
         'jam',
-        // 'jurusan',
-        'kd_jurusan',
-        'kelas',
+        'tingkat',
+        // 'kd_jurusan',
+        'kd_kelas',
     ];
 
     public function mapel()
@@ -24,10 +24,17 @@ class Jadwal_Mapel extends Model
         return $this->belongsTo('App\Models\Mapel', 'kd_mapel', 'kd_mapel');
     }
 
-    public function jurusan()
+    public function kelas()
     {
-        return $this->belongsTo('App\Models\Jurusan', 'kd_jurusan', 'kd_jurusan');
+        return $this->belongsTo('App\Models\Kelas', 'kd_kelas', 'kd_kelas');
     }
+
+    protected $hidden = [
+        // 'password',
+        // 'remember_token',
+        'created_at',
+        'updated_at',
+    ];
 
     // protected $table = 'jadwal_mapels';
 }

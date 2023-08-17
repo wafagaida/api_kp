@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\Mapel;
-use App\Models\Jurusan;
+use App\Models\Kelas;
 use App\Models\Jadwal_Mapel;
 use App\Http\Resources\PostResource;
 use Illuminate\Http\Request;
@@ -24,8 +24,8 @@ class JadwalController extends Controller
         // $user = User::OrderBy('nis', 'ASC')->get();
         // $jadwal = Jadwal_Mapel::get();
         // $jadwal = Jadwal_Mapel::with(['mapel', 'jurusan'])->get();
-        $jadwal = Jadwal_Mapel::orderBy('hari','asc')
-        ->with(['mapel', 'jurusan'])
+        $jadwal = Jadwal_Mapel::orderBy('hari','desc')->orderBy('jam', 'asc')
+        ->with(['mapel', 'kelas'])
         ->get();
         
 
@@ -43,7 +43,8 @@ class JadwalController extends Controller
             'kd_mapel' => 'required',
             'hari'     => 'required',
             'jam'      => 'required',
-            'kd_jurusan'  => 'required',
+            'kd_kelas'  => 'required',
+            'tingkat'  => 'required',
         ]);
 
         //check if validation fails
@@ -56,7 +57,8 @@ class JadwalController extends Controller
             'kd_mapel' => $request->kd_mapel,
             'hari'     => $request->hari,
             'jam'      => $request->jam,
-            'kd_jurusan'  => $request->kd_jurusan,
+            'kd_kelas'  => $request->kd_kelas,
+            'tingkat'  => $request->tingkat,
         ]);
 
         //return response
@@ -66,11 +68,12 @@ class JadwalController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($kd_jurusan)
+    public function show($id)
     {
-        $jadwal = Jadwal_Mapel::orderBy('hari','asc')
-        ->with(['mapel', 'jurusan'])
+        $jadwal = Jadwal_Mapel::where('kd_kelas',$id)
+        ->with(['mapel', 'kelas'])
         ->get();
+        $kd_kelas = $jadwal->groupBy('kd_kelas');
         // $jadwal = Jadwal_Mapel::with(['mapel', 'jurusan'])->get();
         return new PostResource(true, 'Data Mapel Ditemukan!', $jadwal);
         

@@ -11,11 +11,11 @@ class Jurusan extends Model
 
     protected $fillable = [
         'kd_jurusan',
-        'jurusan',
+        'nama_jurusan',
     ];
 
-    public function jadwal()
-    {
-        return $this->hasMany('App\Models\Jadwal_Mapel', 'kd_jurusan');
-    }
+    // public function jadwal()
+    // {
+    //     return $this->hasMany('App\Models\Jadwal_Mapel', 'kd_jurusan');
+    // }
 }

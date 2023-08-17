@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostResource;
 use App\Models\User;
+use App\Models\Kelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
@@ -16,12 +17,15 @@ class PostUserController extends Controller
      */
     public function index()
     {
-        return response()->json(User::orderBy('nis', 'ASC')->get());
+        // return response()->json(User::orderBy('nis', 'ASC')->get());
+        $user = User::orderBy('nis','asc')
+        ->with(['kelas'])
+        ->get();
         //get posts
         // $user = User::latest()->paginate(10);
 
         // //return collection of posts as a resource
-        // return new PostResource(true, 'List Data Siswa', $user);
+        return new PostResource(true, 'List Data Siswa', $user);
     }
 
     /**
@@ -73,8 +77,12 @@ class PostUserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show($id)
     {   
+        $user = User::where('nis',$id)
+        ->with(['kelas'])
+        ->get();
+        $kd_kelas = $user->groupBy('nis');
         return new PostResource(true, 'Data Siswa Ditemukan!', $user, 201);
     }
 

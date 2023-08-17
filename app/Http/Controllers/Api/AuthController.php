@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\PostResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,8 +24,9 @@ class AuthController extends Controller
             'jenis_kelamin' => 'string|max:45',
             'tanggal_lahir'=> '',
             'alamat' => '',
-            'kelas' => 'string|max:45',
+            'tingkat' => 'string|max:45',
             'jurusan' => 'string|max:45',
+            'kd_kelas' => 'string|max:45',
             'no_tlp' => '',
             'tahun_masuk' => '',
         ]);
@@ -40,8 +42,9 @@ class AuthController extends Controller
         $user->jenis_kelamin = $request->jenis_kelamin;
         $user->tanggal_lahir = $request->tanggal_lahir;
         $user->alamat = $request->alamat;
-        $user->kelas = $request->kelas;
+        $user->tingkat = $request->tingkat;
         $user->jurusan = $request->jurusan;
+        $user->kd_kelas = $request->kd_kelas;
         $user->no_tlp = $request->no_tlp;
         $user->tahun_masuk = $request->tahun_masuk;
         $user->save();
@@ -79,6 +82,8 @@ class AuthController extends Controller
             ], 404);
         }
 
+        $user->save();
+
         $token = $user->createToken('login-token')->plainTextToken;
 
         $response = [
@@ -101,10 +106,21 @@ class AuthController extends Controller
         return response($response, 200);
     }
 
-    public function user()
-    {
-        return response([
-            'user' => auth()->user()
-        ], 200);
-    }
+    // public function user()
+    // {
+    //     $user = User::orderBy('nis','asc')
+    //     ->with(['kelas'])
+    //     ->get();
+
+    //     return new PostResource(true, 'List Data Siswa', $user);
+    // }
+
+
+
+    // public function user()
+    // {
+    //     return response([
+    //         'user' => auth()->user()
+    //     ], 200);
+    // }
 }

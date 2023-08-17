@@ -14,4 +14,11 @@ class Nilai extends Model
         'kd_mapel',
         'nilai',
     ];
+
+    protected $hidden = [
+        // 'password',
+        // 'remember_token',
+        'created_at',
+        'updated_at',
+    ];
 }

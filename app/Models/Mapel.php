@@ -18,6 +18,13 @@ class Mapel extends Model
 
     public function jadwal()
     {
-        return $this->hasMany('App\Models\Jadwal_Mapel', 'kd_mapel');
+        return $this->belongsTo('App\Models\Jadwal_Mapel', 'kd_mapel');
     }
+
+    protected $hidden = [
+        // 'password',
+        // 'remember_token',
+        'created_at',
+        'updated_at',
+    ];
 }

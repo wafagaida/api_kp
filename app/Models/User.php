@@ -18,7 +18,6 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     // protected $table = 'users';
-    // protected $primaryKey = 'id';
 
     protected $fillable = [
         'nis',
@@ -29,12 +28,22 @@ class User extends Authenticatable
         'jenis_kelamin',
         'tanggal_lahir',
         'alamat',
-        'kelas',
+        'tingkat',
+        'kd_kelas',
         'jurusan',
         'no_tlp',
         'tahun_masuk',
-        // 'remember_token',
     ];
+
+    // public function kelas()
+    // {
+    //     return $this->hasMany('App\Models\Kelas', 'kd_kelas', 'kd_kelas');
+    // }
+
+    public function kelas()
+    {
+        return $this->belongsTo('App\Models\Kelas', 'kd_kelas', 'kd_kelas');
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -44,6 +53,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -55,4 +66,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         // 'password' => 'hashed',
     ];
+
+    protected $primaryKey = 'username';
 }

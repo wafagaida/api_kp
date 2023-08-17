@@ -14,4 +14,12 @@ class News extends Model
         'title',
         'content',
     ];
+
+    // */
+    protected $hidden = [
+        // 'password',
+        // 'remember_token',
+        'created_at',
+        'updated_at',
+    ];
 }
