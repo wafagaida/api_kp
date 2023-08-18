@@ -21,6 +21,11 @@ class Mapel extends Model
         return $this->belongsTo('App\Models\Jadwal_Mapel', 'kd_mapel');
     }
 
+    public function nilai()
+    {
+        return $this->belongsTo('App\Models\Nilai', 'kd_mapel');
+    }
+
     protected $hidden = [
         // 'password',
         // 'remember_token',

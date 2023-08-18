@@ -14,28 +14,17 @@ use Illuminate\Support\Facades\Storage;
 
 class JadwalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //get news
-        // $news = News::latest()->paginate(5);
-        // $user = User::OrderBy('nis', 'ASC')->get();
-        // $jadwal = Jadwal_Mapel::get();
-        // $jadwal = Jadwal_Mapel::with(['mapel', 'jurusan'])->get();
+
         $jadwal = Jadwal_Mapel::orderBy('hari','desc')->orderBy('jam', 'asc')
         ->with(['mapel', 'kelas'])
         ->get();
-        
 
         //return collection of news as a resource
         return new PostResource(true, 'List Mapel', $jadwal);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //define validation rules
@@ -49,15 +38,19 @@ class JadwalController extends Controller
 
         //check if validation fails
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'data' => [],
+                'message' => $validator->errors(),
+                'success' => false
+            ], 422);
         }
 
         //create news
-        $jadwal = Jadwal_Mapel::updateOrCreate([
+        $jadwal = Jadwal_Mapel::create([
             'kd_mapel' => $request->kd_mapel,
             'hari'     => $request->hari,
             'jam'      => $request->jam,
-            'kd_kelas'  => $request->kd_kelas,
+            'kd_kelas' => $request->kd_kelas,
             'tingkat'  => $request->tingkat,
         ]);
 
@@ -65,9 +58,6 @@ class JadwalController extends Controller
         return new PostResource(true, 'Data Mapel Berhasil Ditambahkan!', $jadwal);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         $jadwal = Jadwal_Mapel::where('kd_kelas',$id)
@@ -133,6 +123,7 @@ class JadwalController extends Controller
     {
         //delete image
         // Storage::delete('public/news/'.$news->image);
+        $jadwal = Jadwal_Mapel::findorfail($id);
 
         //delete news
         $jadwal->delete();

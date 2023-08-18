@@ -106,6 +106,20 @@ class AuthController extends Controller
         return response($response, 200);
     }
 
+    public function update_password(Request $request, $nis)
+    {
+        $this->validate($request, [
+            'password' => 'required|string|min:8|confirmed'
+        ]);
+        $user = User::findorfail($nis);
+        $user_data = [
+            'password' => Hash::make($request->password)
+        ];
+        $user->update($user_data);
+
+        return new PostResource(true, 'Data Siswa Berhasil Diubah!', $user);
+    }
+
     // public function user()
     // {
     //     $user = User::orderBy('nis','asc')

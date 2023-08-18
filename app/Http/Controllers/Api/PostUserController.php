@@ -42,8 +42,9 @@ class PostUserController extends Controller
             'jenis_kelamin' => 'required|string|max:45',
             'tanggal_lahir'=> 'required|',
             'alamat' => 'required',
-            'kelas' => 'required|string|max:45',
+            'tingkat' => 'required|string|max:45',
             'jurusan' => 'required|string|max:45',
+            'kd_kelas' => 'required|string|max:45',
             'no_tlp' => 'required',
             'tahun_masuk' => 'required',
         ]);
@@ -65,8 +66,9 @@ class PostUserController extends Controller
             'jenis_kelamin' => $request->jenis_kelamin,
             'tanggal_lahir' => $request->tanggal_lahir,
             'alamat' => $request->alamat,
-            'kelas' => $request->kelas,
+            'tingkat' => $request->tingkat,
             'jurusan' => $request->jurusan,
+            'kd_kelas' => $request->kd_kelas,
             'no_tlp' => $request->no_tlp,
             'tahun_masuk' => $request->tahun_masuk,
         ]);
@@ -90,47 +92,53 @@ class PostUserController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, User $user)
-    {
-        $validator = Validator::make($request->all(), [
-            'nis' => 'string|max:45',
-            'nik' => '',
-            'username' => 'string|max:255|unique:users',
-            'password' => 'string|max:100|min:6',
-            'nama' => 'string|max:255',
-            'jenis_kelamin' => 'string|max:45',
-            'tanggal_lahir'=> '',
-            'alamat' => '',
-            'kelas' => 'string|max:45',
-            'jurusan' => 'string|max:45',
-            'no_tlp' => '',
-            'tahun_masuk' => '',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'nis' => 'string|max:45' . $user->id,
+        'nik' => '',
+        'username' => 'string|max:255|unique:users,username,' ,
+        'password' => 'string|max:100|min:6',
+        'nama' => 'string|max:255',
+        'jenis_kelamin' => 'string|max:45',
+        'tanggal_lahir' => '',
+        'alamat' => '',
+        'tingkat' => 'string|max:45',
+        'jurusan' => 'string|max:45',
+        'kd_kelas' => 'string|max:45',
+        'no_tlp' => '',
+        'tahun_masuk' => '',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'data' => [],
-                'message' => $validator->errors(),
-                'success' => false
-            ], 422);
-        }
+    if ($validator->fails()) {
+        return response()->json($validator->errors(), 422);
+    }
 
+    try {
         $user->update([
             'nis' => $request->nis,
             'nik' => $request->nik,
             'username' => $request->username,
-            'password' => Hash::make($request->password),
+            // 'password' => Hash::make($request->password),
             'nama' => $request->nama,
             'jenis_kelamin' => $request->jenis_kelamin,
             'tanggal_lahir' => $request->tanggal_lahir,
             'alamat' => $request->alamat,
-            'kelas' => $request->kelas,
+            'tingkat' => $request->tingkat,
             'jurusan' => $request->jurusan,
+            'kd_kelas' => $request->kd_kelas,
             'no_tlp' => $request->no_tlp,
             'tahun_masuk' => $request->tahun_masuk,
         ]);
 
         return new PostResource(true, 'Data Siswa Berhasil Diubah!', $user);
+    } catch (\Exception $e) {
+        return new PostResource(false, 'Data Siswa Gagal Diubah!', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
     }
+}
+
 
     /**
      * Remove the specified resource from storage.

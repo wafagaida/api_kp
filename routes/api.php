@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PostUserController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\JadwalController;
+use App\Http\Controllers\Api\NilaiController;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
@@ -28,6 +29,7 @@ Route::middleware('auth:sanctum')->get('/user', [PostUserController::class, 'use
 Route::apiResource('/posts', PostUserController::class);
 Route::apiResource('/news', NewsController::class);
 Route::apiResource('/jadwal', JadwalController::class);
+Route::apiResource('/nilai', NilaiController::class);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

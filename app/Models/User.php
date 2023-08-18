@@ -45,6 +45,11 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\Kelas', 'kd_kelas', 'kd_kelas');
     }
 
+    public function nilai()
+    {
+        return $this->belongsTo('App\Models\Nilai', 'nis');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *
