@@ -16,61 +16,76 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nis' => 'string|max:45',
-            'nik' => '',
-            'username' => 'string|max:255|unique:users',
-            'password' => 'string|max:100|min:6',
+            'nis' => 'required|string|max:45',
+            'nik' => 'required|',
+            'username' => 'required|string|max:255|unique:users',
+            'password' => 'required|string|max:100|min:6',
             'nama' => 'string|max:255',
             'jenis_kelamin' => 'string|max:45',
-            'tanggal_lahir'=> '',
+            'tanggal_lahir' => '',
             'alamat' => '',
-            'tingkat' => 'string|max:45',
+            'Kelas' => 'X | XI | XII',
             'jurusan' => 'string|max:45',
             'kd_kelas' => 'string|max:45',
             'no_tlp' => '',
             'tahun_masuk' => '',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors());
+            return response()->json($validator->errors(), 422);
         }
-        $user = new user;
-        $user->nis = $request->nis;
-        $user->nik = $request->nik;
-        $user->username = $request->username;
-        $user->password = Hash::make($request->password);
-        $user->nama = $request->nama;
-        $user->jenis_kelamin = $request->jenis_kelamin;
-        $user->tanggal_lahir = $request->tanggal_lahir;
-        $user->alamat = $request->alamat;
-        $user->tingkat = $request->tingkat;
-        $user->jurusan = $request->jurusan;
-        $user->kd_kelas = $request->kd_kelas;
-        $user->no_tlp = $request->no_tlp;
-        $user->tahun_masuk = $request->tahun_masuk;
-        $user->save();
+        // $user = new user;
+        // $user->nis = $request->nis;
+        // $user->nik = $request->nik;
+        // $user->username = $request->username;
+        // $user->password = Hash::make($request->password);
+        // $user->nama = $request->nama;
+        // $user->jenis_kelamin = $request->jenis_kelamin;
+        // $user->tanggal_lahir = $request->tanggal_lahir;
+        // $user->alamat = $request->alamat;
+        // $user->kelas = $request->kelas;
+        // $user->jurusan = $request->jurusan;
+        // $user->kd_kelas = $request->kd_kelas;
+        // $user->no_tlp = $request->no_tlp;
+        // $user->tahun_masuk = $request->tahun_masuk;
+        // $user->save();
 
+        $user = User::create([
+            'nis'      => $request->nis,
+            'nik'     => $request->nik,
+            'username'     => $request->username,
+            'password'  => Hash::make($request->password),
+            'nama'     => $request->nama,
+            'jenis_kelamin'     => $request->jenis_kelamin,
+            'tanggal_lahir'     => $request->tanggal_lahir,
+            'alamat'     => $request->alamat,
+            'kelas'     => $request->kelas,
+            'jurusan'     => $request->jurusan,
+            'kd_kelas'     => $request->kd_kelas,
+            'no_tlp'     => $request->no_tlp,
+            'tahun_masuk'     => $request->tahun_masuk,
+        ]);
         $token = $user->createToken('regis_token')->plainTextToken;
 
-        return response()->json([
-            'data' => $user,
-            'access_token' => $token,
-            'token_type' => 'Bearer'
-        ]);
+        if ($user) {
+            return response()->json([
+                'data' => $user,
+                'access_token' => $token,
+                'token_type' => 'Bearer'
+            ]);
+        }
     }
 
 
     public function login(Request $request)
     {
-        $messages = [
-            'username.required' => 'Username is required!',
-            'password.required' => 'Password is required!'
-        ];
+        $validator = Validator::make($request->all(), [
+            'username'     => 'required',
+            'password'  => 'required'
+        ]);
 
-        $validatedData = $request->validate([
-            'username' => 'required',
-            'password' => 'required|string',
-            'remember_token' => 'boolean',
-        ], $messages);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
 
         $user = User::where('username', $request->username)->first();
 
@@ -81,13 +96,11 @@ class AuthController extends Controller
                 'message' => ['Username atau Password Salah!']
             ], 404);
         }
-
         $user->save();
 
         $token = $user->createToken('login-token')->plainTextToken;
 
         $response = [
-            'success'   => true,
             'user'      => $user,
             'token'     => $token,
             'message'   => 'Berhasil Login'
