@@ -16,13 +16,14 @@ return new class extends Migration
             $table->string('nis', 45)->primary();
             $table->string('nik', 45)->nullable();
             $table->string('username', 45)->unique();
-            $table->string('password', 45);
+            $table->mediumText('password', 45);
             $table->string('nama', 100);
             $table->string('jenis_kelamin', 45);
             $table->date('tanggal_lahir')->nullable();
             $table->text('alamat')->nullable();
             $table->enum('kelas', ['X', 'XI', 'XII']);
             $table->string('jurusan', 45);
+            $table->string('kd_kelas', 45);
             $table->string('no_tlp', 45)->nullable();
             $table->string('tahun_masuk', 5);
             $table->rememberToken();
