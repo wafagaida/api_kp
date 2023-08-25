@@ -14,7 +14,12 @@ return new class extends Migration
         Schema::create('bayars', function (Blueprint $table) {
             $table->id();
             $table->string('nis', 45);
-            $table->integer('tunggakan');
+            $table->string('nama_bayar',45);
+            $table->string('bulan',20);
+            $table->string('tahun',20);
+            $table->integer('jumlah');
+            $table->date('tgl_bayar')->nullable();
+            $table->string('ket',100)->nullable();
             $table->timestamps();
         });
     }

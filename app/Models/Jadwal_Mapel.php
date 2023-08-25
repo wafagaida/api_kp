@@ -15,7 +15,6 @@ class Jadwal_Mapel extends Model
         'hari',
         'jam',
         'tingkat',
-        // 'kd_jurusan',
         'kd_kelas',
     ];
 
@@ -30,8 +29,6 @@ class Jadwal_Mapel extends Model
     }
 
     protected $hidden = [
-        // 'password',
-        // 'remember_token',
         'created_at',
         'updated_at',
     ];

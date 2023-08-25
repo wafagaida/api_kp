@@ -18,7 +18,7 @@ class PostUserController extends Controller
     public function index()
     {
         // return response()->json(User::orderBy('nis', 'ASC')->get());
-        $user = User::orderBy('nis','asc')
+        $user = User::orderBy('kd_kelas','asc')->orderBy('nis','asc')
         ->with(['kelas'])
         ->get();
         //get posts
@@ -35,42 +35,37 @@ class PostUserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nis' => 'required|string|max:45',
-            'nik' => 'required',
+            'nik' => 'required|',
             'username' => 'required|string|max:255|unique:users',
             'password' => 'required|string|max:100|min:6',
-            'nama' => 'required|string|max:255',
-            'jenis_kelamin' => 'required|string|max:45',
-            'tanggal_lahir'=> 'required|',
-            'alamat' => 'required',
-            'tingkat' => 'required|string|max:45',
-            'jurusan' => 'required|string|max:45',
-            'kd_kelas' => 'required|string|max:45',
-            'no_tlp' => 'required',
-            'tahun_masuk' => 'required',
+            'nama' => 'string|max:255',
+            'jenis_kelamin' => 'string|max:45',
+            'tanggal_lahir' => '',
+            'alamat' => '',
+            'tingkat' => '',
+            'jurusan' => 'string|max:45',
+            'kd_kelas' => 'string|max:45',
+            'no_tlp' => '',
+            'tahun_masuk' => '',
         ]);
-
         if ($validator->fails()) {
-            return response()->json([
-                'data' => [],
-                'message' => $validator->errors(),
-                'success' => false
-            ], 422);
+            return response()->json($validator->errors(), 422);
         }
 
         $user = User::create([
-            'nis' => $request->nis,
-            'nik' => $request->nik,
-            'username' => $request->username,
-            'password' => Hash::make($request->password),
-            'nama' => $request->nama,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'alamat' => $request->alamat,
-            'tingkat' => $request->tingkat,
-            'jurusan' => $request->jurusan,
-            'kd_kelas' => $request->kd_kelas,
-            'no_tlp' => $request->no_tlp,
-            'tahun_masuk' => $request->tahun_masuk,
+            'nis'      => $request->nis,
+            'nik'     => $request->nik,
+            'username'     => $request->username,
+            'password'  => Hash::make($request->password),
+            'nama'     => $request->nama,
+            'jenis_kelamin'     => $request->jenis_kelamin,
+            'tanggal_lahir'     => $request->tanggal_lahir,
+            'alamat'     => $request->alamat,
+            'tingkat'     => $request->tingkat,
+            'jurusan'     => $request->jurusan,
+            'kd_kelas'     => $request->kd_kelas,
+            'no_tlp'     => $request->no_tlp,
+            'tahun_masuk'     => $request->tahun_masuk,
         ]);
 
         return new PostResource(true, 'Data User Berhasil Ditambahkan!', $user);
@@ -91,46 +86,48 @@ class PostUserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $nis)
 {
     $validator = Validator::make($request->all(), [
-        'nis' => 'string|max:45' . $user->id,
-        'nik' => '',
-        'username' => 'string|max:255|unique:users,username,' ,
-        'password' => 'string|max:100|min:6',
+        'nis' => 'required|string|max:45',
+        'nik' => 'required|',
+        'username' => '|string|max:255|unique:users',
+        'password' => '|string|max:100|min:6',
         'nama' => 'string|max:255',
         'jenis_kelamin' => 'string|max:45',
         'tanggal_lahir' => '',
         'alamat' => '',
-        'tingkat' => 'string|max:45',
+        'tingkat' => '',
         'jurusan' => 'string|max:45',
         'kd_kelas' => 'string|max:45',
         'no_tlp' => '',
         'tahun_masuk' => '',
     ]);
-
     if ($validator->fails()) {
         return response()->json($validator->errors(), 422);
     }
 
     try {
-        $user->update([
-            'nis' => $request->nis,
-            'nik' => $request->nik,
-            'username' => $request->username,
-            // 'password' => Hash::make($request->password),
-            'nama' => $request->nama,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'alamat' => $request->alamat,
-            'tingkat' => $request->tingkat,
-            'jurusan' => $request->jurusan,
-            'kd_kelas' => $request->kd_kelas,
-            'no_tlp' => $request->no_tlp,
-            'tahun_masuk' => $request->tahun_masuk,
-        ]);
+        if($validator) :
+            $user = User::find($nis)->update([
+                'nis'      => $request->nis,
+                'nik'     => $request->nik,
+                'username'     => $request->username,
+                'password'  => Hash::make($request->password),
+                'nama'     => $request->nama,
+                'jenis_kelamin'     => $request->jenis_kelamin,
+                'tanggal_lahir'     => $request->tanggal_lahir,
+                'alamat'     => $request->alamat,
+                'tingkat'     => $request->tingkat,
+                'jurusan'     => $request->jurusan,
+                'kd_kelas'     => $request->kd_kelas,
+                'no_tlp'     => $request->no_tlp,
+                'tahun_masuk'     => $request->tahun_masuk,
+            ]);
 
-        return new PostResource(true, 'Data Siswa Berhasil Diubah!', $user);
+
+            return new PostResource(true, 'Data Siswa Berhasil Diubah!', $user);
+        endif;
     } catch (\Exception $e) {
         return new PostResource(false, 'Data Siswa Gagal Diubah!', [
             'error' => $e->getMessage(),
@@ -143,8 +140,10 @@ class PostUserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
+        $user = User::findOrFail($id);
+
         $user->delete();
 
         return new PostResource(true, 'Data User Berhasil Dihapus!', null);

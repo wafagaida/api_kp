@@ -28,7 +28,7 @@ class User extends Authenticatable
         'jenis_kelamin',
         'tanggal_lahir',
         'alamat',
-        'kelas',
+        'tingkat',
         'jurusan',
         'kd_kelas',
         'no_tlp',
@@ -48,6 +48,11 @@ class User extends Authenticatable
     public function nilai()
     {
         return $this->belongsTo('App\Models\Nilai', 'nis');
+    }
+
+    public function bayar()
+    {
+        return $this->belongsTo('App\Models\Bayar', 'nis');
     }
 
     /**
@@ -72,5 +77,5 @@ class User extends Authenticatable
         // 'password' => 'hashed',
     ];
 
-    protected $primaryKey = 'username';
+    protected $primaryKey = 'nis';
 }

@@ -24,7 +24,7 @@ class AuthController extends Controller
             'jenis_kelamin' => 'string|max:45',
             'tanggal_lahir' => '',
             'alamat' => '',
-            'Kelas' => 'X | XI | XII',
+            'tingkat' => '',
             'jurusan' => 'string|max:45',
             'kd_kelas' => 'string|max:45',
             'no_tlp' => '',
@@ -33,21 +33,6 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        // $user = new user;
-        // $user->nis = $request->nis;
-        // $user->nik = $request->nik;
-        // $user->username = $request->username;
-        // $user->password = Hash::make($request->password);
-        // $user->nama = $request->nama;
-        // $user->jenis_kelamin = $request->jenis_kelamin;
-        // $user->tanggal_lahir = $request->tanggal_lahir;
-        // $user->alamat = $request->alamat;
-        // $user->kelas = $request->kelas;
-        // $user->jurusan = $request->jurusan;
-        // $user->kd_kelas = $request->kd_kelas;
-        // $user->no_tlp = $request->no_tlp;
-        // $user->tahun_masuk = $request->tahun_masuk;
-        // $user->save();
 
         $user = User::create([
             'nis'      => $request->nis,
@@ -58,7 +43,7 @@ class AuthController extends Controller
             'jenis_kelamin'     => $request->jenis_kelamin,
             'tanggal_lahir'     => $request->tanggal_lahir,
             'alamat'     => $request->alamat,
-            'kelas'     => $request->kelas,
+            'tingkat'     => $request->tingkat,
             'jurusan'     => $request->jurusan,
             'kd_kelas'     => $request->kd_kelas,
             'no_tlp'     => $request->no_tlp,
@@ -101,6 +86,7 @@ class AuthController extends Controller
         $token = $user->createToken('login-token')->plainTextToken;
 
         $response = [
+            'success'   => true,
             'user'      => $user,
             'token'     => $token,
             'message'   => 'Berhasil Login'

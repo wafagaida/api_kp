@@ -35,11 +35,7 @@ class NilaiController extends Controller
 
         //check if validation fails
         if ($validator->fails()) {
-            return response()->json([
-                'data' => [],
-                'message' => $validator->errors(),
-                'success' => false
-            ], 422);
+            return response()->json($validator->errors(), 422);
         }
 
         //create news
@@ -75,13 +71,8 @@ class NilaiController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'data' => [],
-                'message' => $validator->errors(),
-                'success' => false
-            ], 422);
+            return response()->json($validator->errors(), 422);
         }
-
         $nilai->update([
             'nis' => $request->nis,
             'kd_mapel' => $request->kd_mapel,
@@ -94,8 +85,10 @@ class NilaiController extends Controller
         return new PostResource(true, 'Data Nilai Siswa Berhasil Diubah!', $nilai);
     }
 
-    public function destroy(Nilai $nilai)
+    public function destroy($id)
     {
+        $nilai = Nilai::findOrFail($id);
+
         $nilai->delete();
 
         return new PostResource(true, 'Data Nilai Siswa Berhasil Dihapus!', null);
