@@ -22,13 +22,13 @@ class AuthController extends Controller
             'password' => 'required|string|max:100|min:6',
             'nama' => 'string|max:255',
             'jenis_kelamin' => 'string|max:45',
-            'tanggal_lahir' => '',
-            'alamat' => '',
-            'tingkat' => '',
+            'tanggal_lahir' => 'date',
+            'alamat' => 'string',
+            'tingkat' => 'string',
             'jurusan' => 'string|max:45',
             'kd_kelas' => 'string|max:45',
-            'no_tlp' => '',
-            'tahun_masuk' => '',
+            'no_tlp' => 'string',
+            'tahun_masuk' => 'numeric',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);

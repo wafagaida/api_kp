@@ -54,31 +54,32 @@ class MapelController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($kd_mapel)
+    public function show($id)
     {
-        $mapel = Mapel::where('kd_mapel',$kd_mapel)
+        $mapel = Mapel::where('kd_mapel',$id)
         ->get();
 
-        return new PostResource(true, 'Data mapel Ditemukan!', $mapel);
+        return new PostResource(true, 'Data Mapel Ditemukan!', $mapel);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Mapel $mapel)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'kd_mapel'    => 'required',
+            'kd_mapel'    => 'required'. $id,
             'nama_mapel'  => 'required',
             'nama_guru'   => 'required',
         ]);
-
-        //check if validation fails
+    
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
-        if($validator) :
+    
+        try {
+            $mapel = Mapel::find($id);
+            if (!$mapel) {
+                return response()->json(['error' => 'Data Mapel tidak ditemukan'], 404);
+            }
+    
             $mapel->update([
                 'kd_mapel'    => $request->kd_mapel,
                 'nama_mapel'  => $request->nama_mapel,
@@ -86,21 +87,20 @@ class MapelController extends Controller
             ]);
 
 
-            return new PostResource(true, 'Data mapel Berhasil Diubah!', $mapel);
-        endif;
-    
-}
+            return new PostResource(true, 'Data Mapel Berhasil Diubah!', $mapel);
+        } catch (\Exception $e) {
+            return new PostResource(false, 'Data Mapel Gagal Diubah!', [
+                'details' => $e->getMessage(),
+                500
+            ]);
+        }
+    }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $mapel = Mapel::findOrFail($id);
-        //delete news
         $mapel->delete();
 
-        //return response
         return new PostResource(true, 'Data Mapel Berhasil Dihapus!', null);
     }
 }

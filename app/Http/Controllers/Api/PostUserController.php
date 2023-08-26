@@ -40,13 +40,13 @@ class PostUserController extends Controller
             'password' => 'required|string|max:100|min:6',
             'nama' => 'string|max:255',
             'jenis_kelamin' => 'string|max:45',
-            'tanggal_lahir' => '',
-            'alamat' => '',
-            'tingkat' => '',
+            'tanggal_lahir' => 'date',
+            'alamat' => 'string',
+            'tingkat' => 'string',
             'jurusan' => 'string|max:45',
             'kd_kelas' => 'string|max:45',
-            'no_tlp' => '',
-            'tahun_masuk' => '',
+            'no_tlp' => 'string',
+            'tahun_masuk' => 'numeric',
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -86,34 +86,39 @@ class PostUserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $nis)
-{
-    $validator = Validator::make($request->all(), [
-        'nis' => 'required|string|max:45',
-        'nik' => 'required|',
-        'username' => '|string|max:255|unique:users',
-        'password' => '|string|max:100|min:6',
-        'nama' => 'string|max:255',
-        'jenis_kelamin' => 'string|max:45',
-        'tanggal_lahir' => '',
-        'alamat' => '',
-        'tingkat' => '',
-        'jurusan' => 'string|max:45',
-        'kd_kelas' => 'string|max:45',
-        'no_tlp' => '',
-        'tahun_masuk' => '',
-    ]);
-    if ($validator->fails()) {
-        return response()->json($validator->errors(), 422);
-    }
-
-    try {
-        if($validator) :
-            $user = User::find($nis)->update([
-                'nis'      => $request->nis,
-                'nik'     => $request->nik,
-                'username'     => $request->username,
-                'password'  => Hash::make($request->password),
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'nis' => 'required|string|max:45'. $id,
+            'nik' => '|string', 
+            'username' => '|string|max:255' ,
+            'password' => '|string|max:100|min:6',
+            'nama' => '|string|max:255',
+            'jenis_kelamin' => '|string|max:45',
+            'tanggal_lahir' => '|date', 
+            'alamat' => '|string', 
+            'tingkat' => '|string', 
+            'jurusan' => '|string|max:45',
+            'kd_kelas' => '|string|max:45',
+            'no_tlp' => '|string', 
+            'tahun_masuk' => '|numeric', 
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+    
+        try {
+            $user = User::find($id);
+            if (!$user) {
+                return response()->json(['error' => 'Data Siswa tidak ditemukan'], 404);
+            }
+    
+            $user->update([
+                'nis' => $request->nis,
+                'nik' => $request->nik,
+                'username' => $request->username,
+                'password' => Hash::make($request->password),
                 'nama'     => $request->nama,
                 'jenis_kelamin'     => $request->jenis_kelamin,
                 'tanggal_lahir'     => $request->tanggal_lahir,
@@ -127,14 +132,13 @@ class PostUserController extends Controller
 
 
             return new PostResource(true, 'Data Siswa Berhasil Diubah!', $user);
-        endif;
-    } catch (\Exception $e) {
-        return new PostResource(false, 'Data Siswa Gagal Diubah!', [
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-        ]);
+        } catch (\Exception $e) {
+            return new PostResource(false, 'Data Siswa Gagal Diubah!', [
+                'details' => $e->getMessage(),
+                500
+            ]);
+        }
     }
-}
 
 
     /**

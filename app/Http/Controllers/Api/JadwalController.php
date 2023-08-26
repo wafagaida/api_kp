@@ -17,7 +17,7 @@ class JadwalController extends Controller
     public function index()
     {
 
-        $jadwal = Jadwal_Mapel::orderBy('hari','desc')->orderBy('jam', 'asc')
+        $jadwal = Jadwal_Mapel::orderBy('kd_kelas', 'asc')->orderBy('hari','desc')->orderBy('jam', 'asc')
         ->with(['mapel', 'kelas'])
         ->get();
 
@@ -70,62 +70,51 @@ class JadwalController extends Controller
     }
     
 
-    /**
-     * Update the specified resource in storage.
-     */
-    // public function update(Request $request, News $news)
-    // {
-    //    //define validation rules
-    //    $validator = Validator::make($request->all(), [
-    //     'title'     => 'required',
-    //     'content'   => 'required',
-    // ]);
+    public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'kd_mapel' => 'required',
+            'hari'     => 'required',
+            'jam'      => 'required',
+            'kd_kelas'  => 'required',
+            'tingkat'  => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+    
+        try {
+            $jadwal = Jadwal_Mapel::find($id);
+            if (!$jadwal) {
+                return response()->json(['error' => 'Data Jadwal Mapel tidak ditemukan'], 404);
+            }
+    
+            $jadwal->update([
+                'kd_mapel' => $request->kd_mapel,
+                'hari'     => $request->hari,
+                'jam'      => $request->jam,
+                'kd_kelas' => $request->kd_kelas,
+                'tingkat'  => $request->tingkat,
+            ]);
 
-    // //check if validation fails
-    // if ($validator->fails()) {
-    //     return response()->json($validator->errors(), 422);
-    // }
 
-    // //check if image is not empty
-    // if ($request->hasFile('image')) {
-
-    //     //upload image
-    //     $image = $request->file('image');
-    //     $image->storeAs('public/news', $image->hashName());
-
-    //     //delete old image
-    //     Storage::delete('public/news/'.$news->image);
-
-    //     //update news with new image
-    //     $news->update([
-    //         'image'     => $image->hashName(),
-    //         'title'     => $request->title,
-    //         'content'   => $request->content,
-    //     ]);
-
-    // } else {
-
-    //     //update news without image
-    //     $news->update([
-    //         'title'     => $request->title,
-    //         'content'   => $request->content,
-    //     ]);
-    // }
-
-    //return response
-    // return new PostResource(true, 'Data Pengumuman Berhasil Diubah!', $news);
-// }
+            return new PostResource(true, 'Data Jadwal Mapel Berhasil Diubah!', $jadwal);
+        } catch (\Exception $e) {
+            return new PostResource(false, 'Data Jadwal Mapel Gagal Diubah!', [
+                'details' => $e->getMessage(),
+                500
+            ]);
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Jadwal_Mapel $jadwal)
+    public function destroy($id)
     {
-        //delete image
-        // Storage::delete('public/news/'.$news->image);
-        $jadwal = Jadwal_Mapel::findorfail($id);
 
-        //delete news
+        $jadwal = Jadwal_Mapel::findorfail($id);
         $jadwal->delete();
 
         //return response

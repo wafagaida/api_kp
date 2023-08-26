@@ -30,8 +30,8 @@ class KelasController extends Controller
     {
         //define validation rules
         $validator = Validator::make($request->all(), [
-            'kd_kelas'     => 'required',
-            'nama_kelas'     => 'required',
+            'kd_kelas'  => 'required',
+            'nama_kelas'=> 'required',
             'jurusan'   => 'required',
             'tingkat'   => 'required',
         ]);
@@ -43,8 +43,8 @@ class KelasController extends Controller
 
         //create news
         $kelas = Kelas::create([
-            'kd_kelas'     => $$request->kd_kelas,
-            'nama_kelas'     => $request->nama_kelas,
+            'kd_kelas'  => $$request->kd_kelas,
+            'nama_kelas'=> $request->nama_kelas,
             'jurusan'   => $request->jurusan,
             'tingkat'   => $request->tingkat,
         ]);
@@ -56,44 +56,49 @@ class KelasController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($kd_kelas)
+    public function show($id)
     {
-        $kelas = Kelas::where('kd_kelas',$kd_kelas)
+        $kelas = Kelas::where('kd_kelas',$id)
         ->get();
 
         return new PostResource(true, 'Data Kelas Ditemukan!', $kelas);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Kelas $kelas)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'kd_kelas'     => 'required',
-            'nama_kelas'     => 'required',
+            'kd_kelas'  => 'required'. $id,
+            'nama_kelas'=> 'required',
             'jurusan'   => 'required',
             'tingkat'   => 'required',
         ]);
-
-        //check if validation fails
+    
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
-        if($validator) :
+    
+        try {
+            $kelas = Kelas::find($id);
+            if (!$kelas) {
+                return response()->json(['error' => 'Data Kelas tidak ditemukan'], 404);
+            }
+    
             $kelas->update([
-                'kd_kelas'     => $request->kd_kelas,
-                'nama_kelas'     => $request->nama_kelas,
+                'kd_kelas'  => $$request->kd_kelas,
+                'nama_kelas'=> $request->nama_kelas,
                 'jurusan'   => $request->jurusan,
                 'tingkat'   => $request->tingkat,
             ]);
 
 
             return new PostResource(true, 'Data Kelas Berhasil Diubah!', $kelas);
-        endif;
-    
-}
+        } catch (\Exception $e) {
+            return new PostResource(false, 'Data Kelas Gagal Diubah!', [
+                'details' => $e->getMessage(),
+                500
+            ]);
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -101,7 +106,6 @@ class KelasController extends Controller
     public function destroy( $id)
     {
         $kelas = Kelas::findOrFail($id);
-        //delete news
         $kelas->delete();
 
         //return response

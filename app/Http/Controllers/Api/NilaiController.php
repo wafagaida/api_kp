@@ -29,7 +29,7 @@ class NilaiController extends Controller
         $validator = Validator::make($request->all(), [
             'nis'        => 'required',
             'kd_mapel'   => 'required',
-            'nilai'      => 'required',
+            'nilai'      => '',
             'semester'   => 'required',
         ]);
 
@@ -61,28 +61,40 @@ class NilaiController extends Controller
         
     }
 
-    public function update(Request $request, Nilai $nilai)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nis'        => '',
-            'kd_mapel'   => '',
-            'nilai'      => '',
-            'semester'   => '',
+            'nis'        => 'required',
+            'kd_mapel'   => 'required',
+            'nilai'      => 'required',
+            'semester'   => 'required',
         ]);
-
+    
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-        $nilai->update([
-            'nis' => $request->nis,
-            'kd_mapel' => $request->kd_mapel,
-            'nilai'   => $request->nilai,
-            'semester'=> $request->semester,
-        ]);
+    
+        try {
+            $nilai = Nilai::find($id);
+            if (!$nilai) {
+                return response()->json(['error' => 'Data Nilai Siswa tidak ditemukan'], 404);
+            }
+    
+            $nilai->update([
+                'nis'        => $request->nis,
+                'kd_mapel'   => $request->kd_mapel,
+                'nilai'      => $request->nilai,
+                'semester'   => $request->semester,
+            ]);
 
-        // dd($nilai);
 
-        return new PostResource(true, 'Data Nilai Siswa Berhasil Diubah!', $nilai);
+            return new PostResource(true, 'Data Nilai Siswa Berhasil Diubah!', $nilai);
+        } catch (\Exception $e) {
+            return new PostResource(false, 'Data Nilai Siswa Gagal Diubah!', [
+                'details' => $e->getMessage(),
+                500
+            ]);
+        }
     }
 
     public function destroy($id)

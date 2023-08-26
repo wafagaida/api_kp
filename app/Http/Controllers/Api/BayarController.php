@@ -66,37 +66,48 @@ class BayarController extends Controller
         
     }
 
-    public function update(Request $request, Bayar $bayar)
+    public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nis'        => '',
-            'nama_bayar'  => '',
-            'bulan'  => '',
-            'semester'  => '',
-            'nominal'  => '',
+            'nis'        => 'required',
+            'nama_bayar'  => 'required',
+            'bulan'  => 'required',
+            'semester'  => 'required',
+            'nominal'  => 'required',
             'jumlah_bayar'  => '',
             'tgl_bayar'  => '',
             'ket'  => '',
         ]);
-
-
+    
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+    
+        try {
+            $bayar = Bayar::find($id);
+            if (!$bayar) {
+                return response()->json(['error' => 'Data Pembayaran Siswa tidak ditemukan'], 404);
+            }
+    
+            $bayar->update([
+                'nis'        => $request->nis,
+                'nama_bayar'   => $request->nama_bayar,
+                'bulan'      => $request->bulan,
+                'semester'   => $request->semester,
+                'nominal'   => $request->nominal,
+                'jumlah_bayar'   => $request->jumlah_bayar,
+                'tgl_bayar'      => $request->tgl_bayar,
+                'ket'   => $request->ket,
+            ]);
 
-        $bayar->update([
-            'nis'        => $request->nis,
-            'nama_bayar'   => $request->nama_bayar,
-            'bulan'      => $request->bulan,
-            'semester'   => $request->semester,
-            'nominal'   => $request->nominal,
-            'jumlah_bayar'   => $request->jumlah_bayar,
-            'tgl_bayar'      => $request->tgl_bayar,
-            'ket'   => $request->ket,
-        ]);
 
-
-        return new PostResource(true, 'Data Pembayaran Siswa Berhasil Diubah!', $bayar);
+            return new PostResource(true, 'Data Pembayaran Siswa Berhasil Diubah!', $bayar);
+        } catch (\Exception $e) {
+            return new PostResource(false, 'Data Pembayaran Siswa Gagal Diubah!', [
+                'details' => $e->getMessage(),
+                500
+            ]);
+        }
     }
 
     public function destroy($id)
