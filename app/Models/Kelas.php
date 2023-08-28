@@ -9,6 +9,8 @@ class Kelas extends Model
 {
     use HasFactory;
 
+    // protected $primaryKey = 'kd_kelas';
+
     protected $fillable = [
         'kd_kelas',
         'nama_kelas',

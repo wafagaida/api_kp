@@ -32,7 +32,7 @@ class JadwalController extends Controller
             'kd_mapel' => 'required',
             'hari'     => 'required',
             'jam'      => 'required',
-            'kd_kelas'  => 'required',
+            'kd_kelas' => 'required',
             'tingkat'  => 'required',
         ]);
 
