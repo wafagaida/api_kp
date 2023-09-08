@@ -17,9 +17,10 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nis' => 'required|string|max:45',
-            'nik' => 'required|',
+            'nik' => 'required',
             'username' => 'required|string|max:255|unique:users',
             'password' => 'required|string|max:100|min:6',
+            'level' => 'required',
             'nama' => 'string|max:255',
             'jenis_kelamin' => 'string|max:45',
             'tanggal_lahir' => 'date',
@@ -39,6 +40,7 @@ class AuthController extends Controller
             'nik'     => $request->nik,
             'username'     => $request->username,
             'password'  => Hash::make($request->password),
+            'level'     => $request->level,
             'nama'     => $request->nama,
             'jenis_kelamin'     => $request->jenis_kelamin,
             'tanggal_lahir'     => $request->tanggal_lahir,

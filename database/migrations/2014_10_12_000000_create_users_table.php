@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nik', 45)->nullable();
             $table->string('username', 45)->unique();
             $table->mediumText('password', 45);
+            $table->string('level', ['Siswa', 'Admin']);
             $table->string('nama', 100);
             $table->string('jenis_kelamin', 45);
             $table->date('tanggal_lahir')->nullable();

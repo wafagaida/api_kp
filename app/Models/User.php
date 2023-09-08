@@ -24,6 +24,7 @@ class User extends Authenticatable
         'nik',
         'username',
         'password',
+        'level',
         'nama',
         'jenis_kelamin',
         'tanggal_lahir',
